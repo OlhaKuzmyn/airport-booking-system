@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     # Custom
     "apps.city",
     "apps.airport",
-    "apps.airline"
+    "apps.aircraft",
+    "apps.airline",
 ]
 
 MIDDLEWARE = [
