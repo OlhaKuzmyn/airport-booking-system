@@ -48,6 +48,8 @@ INSTALLED_APPS = [
     "apps.aircraft",
     "apps.airline",
     "apps.flight",
+    "apps.user",
+    "apps.passenger",
 ]
 
 MIDDLEWARE = [
@@ -109,6 +111,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTH_USER_MODEL = "user.User"
 
 # Internationalization
 # https://docs.djangoproject.com/en/6.1/topics/i18n/
