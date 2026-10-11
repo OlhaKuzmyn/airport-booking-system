@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     # 3rd
 
     # Custom
+    "apps.country",
     "apps.city",
     "apps.airport",
     "apps.aircraft_type",
