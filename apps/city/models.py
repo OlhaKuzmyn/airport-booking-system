@@ -8,3 +8,11 @@ class City(models.Model):
     country = models.ForeignKey(
         Country, on_delete=models.CASCADE, related_name="cities"
     )
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["name", "country"],
+                name="unique_city_name",
+            )
+        ]
