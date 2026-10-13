@@ -17,3 +17,11 @@ class Airport(models.Model):
         on_delete=models.CASCADE,
         related_name="airports"
     )
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["name", "city"],
+                name="unique_airport_name"
+            )
+        ]
