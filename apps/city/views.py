@@ -9,9 +9,13 @@ class CityViewSet(
     mixins.ListModelMixin,
     viewsets.GenericViewSet
 ):
-    queryset = City.objects.select_related("country")
 
     def get_serializer_class(self):
         if self.action == "retrieve":
             return CityDetailSerializer
         return CitySerializer
+
+    def get_queryset(self):
+        if self.action == "retrieve":
+            return City.objects.prefetch_related("country", "airports")
+        return City.objects.select_related("country")
