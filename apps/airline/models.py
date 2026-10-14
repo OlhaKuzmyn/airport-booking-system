@@ -1,6 +1,5 @@
 from django.db import models
 
-from apps.aircraft.models import Aircraft
 from apps.airport.models import Airport
 
 
@@ -12,9 +11,4 @@ class Airline(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         related_name="hub_airlines"
-    )
-    fleet = models.ForeignKey(
-        Aircraft,
-        on_delete=models.SET_NULL,
-        null=True
     )

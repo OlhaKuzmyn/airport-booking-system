@@ -9,5 +9,5 @@ class AircraftViewSet(
     mixins.ListModelMixin,
     viewsets.GenericViewSet
 ):
-    queryset = Aircraft.objects.select_related("aircraft_type")
+    queryset = Aircraft.objects.select_related("aircraft_type", "airline")
     serializer_class = AircraftSerializer
