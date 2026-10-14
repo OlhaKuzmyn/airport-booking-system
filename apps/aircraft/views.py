@@ -1,3 +1,13 @@
-from django.shortcuts import render
+from rest_framework import viewsets, mixins
 
-# Create your views here.
+from apps.aircraft.models import Aircraft
+from apps.aircraft.serializers import AircraftSerializer
+
+
+class AircraftViewSet(
+    mixins.RetrieveModelMixin,
+    mixins.ListModelMixin,
+    viewsets.GenericViewSet
+):
+    queryset = Aircraft.objects.select_related("aircraft_type")
+    serializer_class = AircraftSerializer
