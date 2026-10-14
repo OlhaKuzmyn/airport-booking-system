@@ -11,3 +11,11 @@ class Aircraft(models.Model):
         AircraftType,
         on_delete=models.CASCADE,
     )
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["serial_number", "aircraft_type"],
+                name="unique_aircraft_serial_number"
+            )
+        ]
