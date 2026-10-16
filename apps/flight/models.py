@@ -19,9 +19,24 @@ class Flight(models.Model):
         null=True,
         related_name="arriving_flights"
     )
-    airline = models.OneToOneField(Airline, on_delete=models.CASCADE)
-    aircraft = models.OneToOneField(
-        Aircraft, on_delete=models.SET_NULL, null=True
+    airline = models.ForeignKey(
+        Airline,
+        on_delete=models.CASCADE,
+        related_name="flights"
+    )
+    aircraft = models.ForeignKey(
+        Aircraft,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="flights"
     )
     departure_time = models.TimeField()
     arrival_time = models.TimeField()
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["number", "airline"],
+                name="unique_flight_airline_number"
+            )
+        ]

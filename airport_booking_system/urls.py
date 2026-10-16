@@ -27,4 +27,5 @@ urlpatterns = [
     path("api/bookings/", include("apps.aircraft_type.urls")),
     path("api/bookings/", include("apps.aircraft.urls")),
     path("api/bookings/", include("apps.airline.urls")),
+    path("api/bookings/", include("apps.flight.urls")),
 ]
