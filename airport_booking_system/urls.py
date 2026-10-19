@@ -18,7 +18,6 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/bookings/", include("apps.city.urls")),
@@ -28,4 +27,6 @@ urlpatterns = [
     path("api/bookings/", include("apps.aircraft.urls")),
     path("api/bookings/", include("apps.airline.urls")),
     path("api/bookings/", include("apps.flight.urls")),
+    path("api/bookings/", include("apps.user.urls")),
+    path("api/bookings/", include("apps.passenger.urls")),
 ]
