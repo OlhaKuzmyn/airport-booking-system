@@ -40,15 +40,14 @@ class UserSerializer(serializers.ModelSerializer):
     # @transaction.atomic
     def create(self, validated_data):
         with transaction.atomic():
-            dob = validated_data.pop("date_of_birth")
+            dob = validated_data.pop("date_of_birth", None)
             user = get_user_model().objects.create_user(**validated_data)
-            user_passenger = {
-                "first_name": validated_data["first_name"],
-                "last_name": validated_data["last_name"],
-                "date_of_birth": dob,
-                "user": user,
-            }
-            Passenger.objects.create(**user_passenger)
+            Passenger.objects.create(
+                first_name=validated_data.get("first_name", ""),
+                last_name=validated_data.get("last_name", ""),
+                date_of_birth=dob,
+                user=user,
+            )
             return user
 
 
