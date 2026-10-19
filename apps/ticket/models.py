@@ -1,5 +1,6 @@
 from django.db import models
 
+from apps.booking.models import Booking
 from apps.flight.models import Flight
 from apps.passenger.models import Passenger
 
@@ -17,3 +18,9 @@ class Ticket(models.Model):
     date = models.DateField()
     seat_row_number = models.IntegerField()
     seat_number = models.IntegerField()
+    booking = models.ForeignKey(
+        Booking,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="tickets"
+    )
