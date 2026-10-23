@@ -1,17 +1,23 @@
 from rest_framework import serializers
 
+from apps.flight.serializers import FlightSerializer
 from apps.ticket.models import Ticket
 
 
-class TicketSerializer(serializers.ModelSerializer):
-    #TODO redo the serializer as no point in creating
-    # a flight date in each ticket if its the same for several
-    # tickets in booking
-    #TODO consider if flights is causing a value error
+class SeatSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ticket
         fields = (
-            "id", "flights", "date", "seat_row_number", "seat_number"
+            "id", "seat_row_number", "seat_number"
         )
         read_only_fields = ("id",)
+
+class TicketListSerializer(serializers.ModelSerializer):
+    flights = serializers.SlugRelatedField(
+        many=True, read_only=True, slug_field="number"
+    )
+
+    class Meta:
+        model = Ticket
+        fields = ("id", "flights", "date")
