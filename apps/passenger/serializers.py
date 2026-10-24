@@ -26,4 +26,4 @@ class PassengerNameSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Passenger
-        fields = ("id", "first_name", "last_name")
+        fields = ("first_name", "last_name")

@@ -12,12 +12,18 @@ class Ticket(models.Model):
         null=True,
         related_name="tickets"
     )
-    flights = models.ManyToManyField(
-        Flight, related_name="tickets", blank=True
+    outbound_flights = models.ManyToManyField(
+        Flight,
+        blank=True,
+        related_name="tickets_outbound"
     )
-    date = models.DateField()
-    seat_row_number = models.IntegerField()
-    seat_number = models.IntegerField()
+    inbound_flights = models.ManyToManyField(
+        Flight,
+        blank=True,
+        related_name="tickets_inbound"
+    )
+    outbound_flight_date = models.DateField(blank=True, null=True)
+    inbound_flight_date = models.DateField(blank=True, null=True)
     booking = models.ForeignKey(
         Booking,
         on_delete=models.SET_NULL,
