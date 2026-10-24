@@ -3,7 +3,7 @@ from rest_framework import serializers
 
 from apps.booking.models import Booking
 from apps.passenger.models import Passenger
-from apps.passenger.serializers import PassengerSerializer
+from apps.passenger.serializers import PassengerSerializer, PassengerNameSerializer
 from apps.ticket.models import Ticket
 from apps.ticket.serializers import SeatSerializer, TicketListSerializer
 
@@ -61,9 +61,18 @@ class BookingListSerializer(BookingSerializer):
     # date = serializers.DateField(
     #     format="%Y-%m-%d", read_only=True, source="tickets.date"
     # )
-    tickets = TicketListSerializer(many=True, read_only=True)
+
+    # passengers = PassengerNameSerializer(many=True, read_only=True, source="tickets.passenger")
+
+    # tickets = TicketListSerializer(many=True, read_only=True)
+
+    passengers = serializers.ListField(
+        child=serializers.CharField(),
+        read_only=True
+    )
+
     #TODO make flight and date appear only once!!!
 
     class Meta:
         model = Booking
-        fields = ("id", "created_at", "passengers", "tickets")
+        fields = ("id", "created_at", "passengers")
