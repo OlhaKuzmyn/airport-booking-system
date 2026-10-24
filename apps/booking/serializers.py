@@ -29,7 +29,7 @@ class BookingSerializer(serializers.ModelSerializer):
         read_only_fields = ("id", "created_at", "user")
 
     def create(self, validated_data):
-        with (transaction.atomic()):
+        with transaction.atomic():
             passengers_data = validated_data.pop("passengers")
             outbound_flights = validated_data.pop("outbound_flights", None)
             inbound_flights = validated_data.pop("inbound_flights", None)
