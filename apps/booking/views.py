@@ -3,16 +3,17 @@ from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 
 from apps.booking.models import Booking
-from apps.booking.serializers import BookingSerializer, BookingListSerializer
+from apps.booking.serializers import BookingSerializer, BookingListSerializer, BookingDetailSerializer
 
 
 class BookingViewSet(viewsets.ModelViewSet):
-    queryset = Booking.objects.select_related("user").prefetch_related("tickets")
     permission_classes = (IsAuthenticated,)
 
     def get_serializer_class(self):
         if self.action == "list":
             return BookingListSerializer
+        if self.action == "retrieve":
+            return BookingDetailSerializer
         return BookingSerializer
 
     @transaction.atomic
@@ -20,4 +21,7 @@ class BookingViewSet(viewsets.ModelViewSet):
         return self.create(request, *args, **kwargs)
 
     def get_queryset(self):
-        return Booking.objects.filter(user=self.request.user)
+        queryset = Booking.objects.select_related(
+            "user",
+        ).prefetch_related("outbound_flights", "inbound_flights", "passengers", "tickets")
+        return queryset.filter(user=self.request.user)

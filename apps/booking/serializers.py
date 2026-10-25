@@ -22,8 +22,8 @@ class BookingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Booking
         fields = ("id", "created_at", "passengers", "number_of_passengers",
-                  "outbound_flight_date", "inbound_flight_date",
-                  "outbound_flights", "inbound_flights",
+                  "outbound_flight_date", "outbound_flights",
+                  "inbound_flight_date", "inbound_flights",
                   "booking_for_user", "user"
                   )
         read_only_fields = ("id", "created_at", "user")
@@ -78,3 +78,11 @@ class BookingListSerializer(BookingSerializer):
             "inbound_flights", "inbound_flight_date",
             "passengers", "number_of_passengers",
             "created_at", "user")
+
+
+class BookingDetailSerializer(BookingListSerializer):
+    passengers = PassengerSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Booking
+        fields = BookingSerializer.Meta.fields
