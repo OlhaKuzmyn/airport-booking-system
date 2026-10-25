@@ -11,18 +11,13 @@ from apps.ticket.models import Ticket
 
 class BookingSerializer(serializers.ModelSerializer):
     passengers = PassengerSerializer(many=True)
-    outbound_flight_date = serializers.DateField(format="%Y-%m-%d", required=False)
-    inbound_flight_date = serializers.DateField(format="%Y-%m-%d", required=False)
     booking_for_user = serializers.BooleanField(default=True, write_only=True)
-    number_of_passengers = serializers.IntegerField(validators=[
-        MinValueValidator(1), MaxValueValidator(9)
-    ])
+    number_of_passengers = serializers.IntegerField()
 
     class Meta:
         model = Booking
         fields = ("id", "created_at", "passengers", "number_of_passengers",
-                  "outbound_flight_date", "outbound_flights",
-                  "inbound_flight_date", "inbound_flights",
+                  "outbound_flights", "inbound_flights",
                   "booking_for_user", "user"
                   )
         read_only_fields = ("id", "created_at", "user")
@@ -32,8 +27,6 @@ class BookingSerializer(serializers.ModelSerializer):
             passengers_data = validated_data.pop("passengers")
             outbound_flights = validated_data.pop("outbound_flights", None)
             inbound_flights = validated_data.pop("inbound_flights", None)
-            outbound_flight_date = validated_data.get("outbound_flight_date", None)
-            inbound_flight_date = validated_data.get("inbound_flight_date", None)
             booking_for_user = validated_data.pop("booking_for_user")
             user = self.context["request"].user
             booking = Booking.objects.create(**validated_data, user=user)
@@ -49,8 +42,6 @@ class BookingSerializer(serializers.ModelSerializer):
             #TODO transaction not stopping booking creation in case of error!!!
 
             tickets = [Ticket.objects.create(
-                outbound_flight_date=outbound_flight_date,
-                inbound_flight_date=inbound_flight_date,
                 passenger=passenger,
                 booking=booking
                 ) for passenger in passengers

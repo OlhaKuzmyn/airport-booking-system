@@ -24,8 +24,6 @@ class Booking(models.Model):
         blank=True,
         related_name="bookings_inbound"
     )
-    outbound_flight_date = models.DateField(blank=True, null=True)
-    inbound_flight_date = models.DateField(blank=True, null=True)
     number_of_passengers = models.IntegerField(validators=[
         MinValueValidator(1), MaxValueValidator(9)],
     )
@@ -33,3 +31,33 @@ class Booking(models.Model):
         Passenger,
         related_name="bookings",
     )
+
+    # @staticmethod
+    # def validate_number_of_passengers(
+    #         number_of_passengers, outbound_flights, inbound_flights, error
+    # ):
+    #     flights = outbound_flights.all().union(inbound_flights.all())
+    #     for flight in flights:
+    #         if flight.current_capacity >= number_of_passengers:
+    #             flight.current_capacity -= number_of_passengers
+    #         else:
+    #             raise error(
+    #                 {
+    #                     f"Not enough seats on the flight: {flight}"
+    #                 }
+    #             )
+    #
+    # def clean(self):
+    #     Booking.validate_number_of_passengers(
+    #         self.number_of_passengers,
+    #         self.outbound_flights,
+    #         self.inbound_flights,
+    #         ValueError
+    #     )
+    #
+    # def save(self, *args, **kwargs):
+    #     self.full_clean()
+    #     return super(Booking, self).save(*args, **kwargs)
+
+
+

@@ -22,8 +22,6 @@ class Ticket(models.Model):
         blank=True,
         related_name="tickets_inbound"
     )
-    outbound_flight_date = models.DateField(blank=True, null=True)
-    inbound_flight_date = models.DateField(blank=True, null=True)
     booking = models.ForeignKey(
         Booking,
         on_delete=models.SET_NULL,
