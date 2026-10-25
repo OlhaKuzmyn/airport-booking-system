@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from apps.flight.serializers import FlightSerializer, FlightBookingSerializer
+from apps.flight.serializers import FlightBookingSerializer
 from apps.passenger.serializers import PassengerNameSerializer
 from apps.ticket.models import Ticket
 

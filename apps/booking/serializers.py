@@ -7,7 +7,6 @@ from apps.flight.serializers import FlightListSerializer, FlightBookingSerialize
 from apps.passenger.models import Passenger
 from apps.passenger.serializers import PassengerSerializer, PassengerNameSerializer
 from apps.ticket.models import Ticket
-from apps.ticket.serializers import SeatSerializer, TicketListSerializer
 
 
 class BookingSerializer(serializers.ModelSerializer):
