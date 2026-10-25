@@ -4,44 +4,52 @@ from apps.flight.models import Flight
 
 
 class FlightSerializer(serializers.ModelSerializer):
-    departure_time = serializers.TimeField(format="%H:%M", input_formats=("%H:%M",))
-    arrival_time = serializers.TimeField(format="%H:%M", input_formats=("%H:%M",))
+    departure_date_time = serializers.DateTimeField()
+    arrival_date_time = serializers.DateTimeField
 
     class Meta:
         model = Flight
         fields = (
-            "id", "number", "origin_airport", "destination_airport",
-            "airline", "aircraft", "departure_time", "arrival_time",
+            "id", "flight_number", "aircraft",
+            "departure_date_time", "arrival_date_time",
         )
 
 
 class FlightListSerializer(FlightSerializer):
-    origin_airport = serializers.SlugRelatedField(
-        slug_field="code", read_only=True
+    origin_airport = serializers.CharField(
+        source="flight_number.origin_airport.code",
+        read_only=True
     )
-    destination_airport = serializers.SlugRelatedField(
-        slug_field="code", read_only=True
+    destination_airport = serializers.CharField(
+        source="flight_number.destination_airport.code",
+        read_only=True
     )
-    airline = serializers.SlugRelatedField(
-        slug_field="code", read_only=True
+    airline = serializers.CharField(
+        source="flight_number.airline.code", read_only=True
+    )
+    number = serializers.CharField(
+        source="flight_number.number", read_only=True
     )
 
     class Meta:
         model = Flight
         fields = (
             "id", "number", "origin_airport", "destination_airport",
-            "airline", "departure_time", "arrival_time",
+            "airline", "departure_date_time", "arrival_date_time",
         )
 
 class FlightDetailSerializer(FlightListSerializer):
-    origin_airport = serializers.SlugRelatedField(
-        slug_field="name", read_only=True
+    origin_airport = serializers.CharField(
+        source="flight_number.origin_airport.name",
+        read_only=True
     )
-    destination_airport = serializers.SlugRelatedField(
-        slug_field="name", read_only=True
+    destination_airport = serializers.CharField(
+        source="flight_number.destination_airport.name",
+        read_only=True
     )
-    airline = serializers.SlugRelatedField(
-        slug_field="name", read_only=True
+    airline = serializers.CharField(
+        source="flight_number.airline.name",
+        read_only=True
     )
     aircraft_number = serializers.CharField(
         source="aircraft.serial_number",
@@ -56,10 +64,11 @@ class FlightDetailSerializer(FlightListSerializer):
         read_only=True,
     )
 
+
     class Meta:
         model = Flight
         fields = FlightListSerializer.Meta.fields + (
-            "aircraft_number", "aircraft_type", "capacity"
+            "aircraft_number", "aircraft_type", "capacity", "current_availability"
         )
 
 class FlightBookingSerializer(FlightListSerializer):

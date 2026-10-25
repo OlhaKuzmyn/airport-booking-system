@@ -3,6 +3,7 @@ from django.db import transaction
 from rest_framework import serializers
 
 from apps.booking.models import Booking
+from apps.flight.models import Flight
 from apps.flight.serializers import FlightListSerializer, FlightBookingSerializer
 from apps.passenger.models import Passenger
 from apps.passenger.serializers import PassengerSerializer, PassengerNameSerializer
@@ -10,7 +11,7 @@ from apps.ticket.models import Ticket
 
 
 class BookingSerializer(serializers.ModelSerializer):
-    passengers = PassengerSerializer(many=True)
+    passengers = PassengerSerializer(many=True, required=False)
     booking_for_user = serializers.BooleanField(default=True, write_only=True)
     number_of_passengers = serializers.IntegerField()
 
@@ -22,15 +23,27 @@ class BookingSerializer(serializers.ModelSerializer):
                   )
         read_only_fields = ("id", "created_at", "user")
 
+    def validate(self, attrs):
+        number_of_passengers = attrs["number_of_passengers"]
+        flts = attrs.get("outbound_flights", []) + attrs.get("inbound_flights", [])
+        for flight in flts:
+            if flight.current_availability < number_of_passengers:
+                raise serializers.ValidationError(
+                    f"Not enough seats on the flight: {flight}"
+                )
+        return attrs
+
+
     def create(self, validated_data):
         with transaction.atomic():
-            passengers_data = validated_data.pop("passengers")
-            outbound_flights = validated_data.pop("outbound_flights", None)
-            inbound_flights = validated_data.pop("inbound_flights", None)
+            passengers = validated_data.pop("passengers", [])
+            outbound_flights = validated_data.pop("outbound_flights", [])
+            inbound_flights = validated_data.pop("inbound_flights", [])
             booking_for_user = validated_data.pop("booking_for_user")
             user = self.context["request"].user
             booking = Booking.objects.create(**validated_data, user=user)
-            passengers = [Passenger.objects.create(**passenger) for passenger in passengers_data]
+            if passengers:
+                passengers = [Passenger.objects.create(**passenger) for passenger in passengers]
             if booking_for_user:
                 passengers.extend([user.passenger])
             booking.passengers.set(passengers)
