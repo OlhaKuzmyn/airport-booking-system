@@ -30,4 +30,4 @@ urlpatterns = [
     path("api/bookings/", include("apps.user.urls")),
     path("api/bookings/", include("apps.passenger.urls")),
     path("api/bookings/", include("apps.booking.urls")),
-]
+] + [path('silk/', include("silk.urls", namespace="silk"))]

@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "rest_framework",
     # 3rd
     "rest_framework_simplejwt",
+    "silk",
     # Custom
     "apps.country",
     "apps.city",
@@ -56,6 +57,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "silk.middleware.SilkyMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
