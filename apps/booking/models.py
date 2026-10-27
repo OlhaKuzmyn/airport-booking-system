@@ -26,33 +26,3 @@ class Booking(models.Model):
         Passenger,
         related_name="bookings",
     )
-
-    # @staticmethod
-    # def validate_number_of_passengers(
-    #         number_of_passengers, outbound_flights, inbound_flights, error
-    # ):
-    #     flights = outbound_flights.all().union(inbound_flights.all())
-    #     for flight in flights:
-    #         if flight.current_capacity >= number_of_passengers:
-    #             flight.current_capacity -= number_of_passengers
-    #         else:
-    #             raise error(
-    #                 {
-    #                     f"Not enough seats on the flight: {flight}"
-    #                 }
-    #             )
-    #
-    # def clean(self):
-    #     Booking.validate_number_of_passengers(
-    #         self.number_of_passengers,
-    #         self.outbound_flights,
-    #         self.inbound_flights,
-    #         ValueError
-    #     )
-    #
-    # def save(self, *args, **kwargs):
-    #     self.full_clean()
-    #     return super(Booking, self).save(*args, **kwargs)
-
-
-
