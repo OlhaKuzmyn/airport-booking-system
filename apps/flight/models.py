@@ -56,5 +56,7 @@ class Flight(models.Model):
 
     @property
     def current_availability(self):
-        booked = self.tickets_outbound.count() + self.tickets_inbound.count()
-        return self.aircraft.aircraft_type.capacity - booked
+        return self.aircraft.aircraft_type.capacity - self.tickets.count()
+
+    class Meta:
+        ordering = ["departure_date_time"]

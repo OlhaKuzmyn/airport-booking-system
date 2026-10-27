@@ -14,15 +14,10 @@ class Booking(models.Model):
         null=True,
         related_name="bookings"
     )
-    outbound_flights = models.ManyToManyField(
+    flights = models.ManyToManyField(
         Flight,
         blank=True,
-        related_name="bookings_outbound"
-    )
-    inbound_flights = models.ManyToManyField(
-        Flight,
-        blank=True,
-        related_name="bookings_inbound"
+        related_name="bookings"
     )
     number_of_passengers = models.IntegerField(validators=[
         MinValueValidator(1), MaxValueValidator(9)],

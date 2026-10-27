@@ -26,6 +26,6 @@ class BookingViewSet(viewsets.ModelViewSet):
             )
         if self.action == "retrieve":
             queryset = queryset.prefetch_related(
-                "outbound_flights", "inbound_flights", "passengers", "tickets"
+                "flights", "passengers", "tickets"
             )
         return queryset.filter(user=self.request.user)

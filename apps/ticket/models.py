@@ -12,15 +12,10 @@ class Ticket(models.Model):
         null=True,
         related_name="tickets"
     )
-    outbound_flights = models.ManyToManyField(
+    flights = models.ManyToManyField(
         Flight,
         blank=True,
-        related_name="tickets_outbound"
-    )
-    inbound_flights = models.ManyToManyField(
-        Flight,
-        blank=True,
-        related_name="tickets_inbound"
+        related_name="tickets"
     )
     booking = models.ForeignKey(
         Booking,
