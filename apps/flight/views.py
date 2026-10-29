@@ -1,10 +1,12 @@
 from rest_framework import viewsets
 
+from airport_booking_system.permissions import IsAdminOrReadOnly
 from apps.flight.models import Flight
 from apps.flight.serializers import FlightListSerializer, FlightDetailSerializer, FlightSerializer
 
 
 class FlightViewSet(viewsets.ModelViewSet):
+    permission_classes = (IsAdminOrReadOnly,)
 
     def get_queryset(self):
         queryset = Flight.objects.select_related(
