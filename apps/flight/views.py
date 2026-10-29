@@ -10,7 +10,9 @@ class FlightViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = Flight.objects.select_related(
-            "flight_number",
+            "flight_number", "flight_number__airline",
+            "flight_number__origin_airport",
+            "flight_number__destination_airport"
         )
         if self.action == "retrieve":
             return queryset.prefetch_related("aircraft",

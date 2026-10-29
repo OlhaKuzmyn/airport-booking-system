@@ -68,7 +68,8 @@ class FlightDetailSerializer(FlightListSerializer):
     class Meta:
         model = Flight
         fields = FlightListSerializer.Meta.fields + (
-            "aircraft_number", "aircraft_type", "capacity", "current_availability"
+            "aircraft_number", "aircraft_type",
+            "capacity", "current_availability"
         )
 
 class FlightBookingSerializer(FlightListSerializer):

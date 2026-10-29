@@ -9,3 +9,5 @@ class IsAdminOrReadOnly(BasePermission):
             )
             or (request.user and request.user.is_staff)
         )
+
+    #TODO change to be just get list?
