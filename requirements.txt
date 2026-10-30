@@ -1,3 +1,4 @@
+django-filter
 asgiref==3.12.1
 black==26.10.0
 click==8.5.0
