@@ -1,11 +1,24 @@
 from rest_framework import serializers
 
-from apps.flight.models import Flight
+from apps.flight.models import Flight, FlightNumber
+
+
+class FlightNumberSerializer(serializers.ModelSerializer):
+    origin_airport = serializers.SlugRelatedField(slug_field="code", read_only=True)
+    destination_airport = serializers.SlugRelatedField(slug_field="code", read_only=True)
+    airline = serializers.SlugRelatedField(slug_field="code", read_only=True)
+
+    class Meta:
+        model = FlightNumber
+        fields = (
+            "id", "airline", "number",
+            "origin_airport", "destination_airport",
+        )
 
 
 class FlightSerializer(serializers.ModelSerializer):
     departure_date_time = serializers.DateTimeField()
-    arrival_date_time = serializers.DateTimeField
+    arrival_date_time = serializers.DateTimeField()
 
     class Meta:
         model = Flight
@@ -13,6 +26,22 @@ class FlightSerializer(serializers.ModelSerializer):
             "id", "flight_number", "aircraft",
             "departure_date_time", "arrival_date_time",
         )
+
+
+# class FlightAirportSerializer(FlightSerializer):
+#     flight_number = serializers.SlugRelatedField(
+#         slug_field="number", read_only=True
+#     )
+#     airline = serializers.CharField(
+#         source="flight_number.airline.code", read_only=True
+#     )
+#
+#     class Meta:
+#         model = Flight
+#         fields = (
+#             "id", "airline", "flight_number", "aircraft",
+#             "departure_date_time", "arrival_date_time",
+#         )
 
 
 class FlightListSerializer(FlightSerializer):
