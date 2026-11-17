@@ -58,5 +58,11 @@ class Flight(models.Model):
     def current_availability(self):
         return self.aircraft.aircraft_type.capacity - self.tickets.count()
 
+    @property
+    def duration(self):
+        rough_duration = self.arrival_date_time - self.departure_date_time
+        duration_sec = int(rough_duration.total_seconds())
+        return f"{round((duration_sec/60)/60)}:{int((duration_sec/60)%60)}"
+
     class Meta:
         ordering = ["departure_date_time"]

@@ -1,3 +1,6 @@
+import datetime
+from zoneinfo import ZoneInfo
+
 from rest_framework import serializers
 
 from apps.flight.models import Flight, FlightNumber
@@ -28,20 +31,44 @@ class FlightSerializer(serializers.ModelSerializer):
         )
 
 
-# class FlightAirportSerializer(FlightSerializer):
-#     flight_number = serializers.SlugRelatedField(
-#         slug_field="number", read_only=True
-#     )
-#     airline = serializers.CharField(
-#         source="flight_number.airline.code", read_only=True
-#     )
-#
-#     class Meta:
-#         model = Flight
-#         fields = (
-#             "id", "airline", "flight_number", "aircraft",
-#             "departure_date_time", "arrival_date_time",
-#         )
+    def validate(self, data):
+        flt_num = data.get("flight_number") or self.instance.flight_number
+        local_departure_timezone = flt_num.origin_airport.city.timezone
+        local_arrival_timezone = flt_num.destination_airport.city.timezone
+        departure_date_time = data.get("departure_date_time").replace(
+            tzinfo=ZoneInfo(local_departure_timezone)
+        ) or self.instance.departure_date_time
+        arrival_date_time = data.get("arrival_date_time").replace(
+            tzinfo=ZoneInfo(local_arrival_timezone)
+        ) or self.instance.arrival_date_time
+
+
+        if departure_date_time < datetime.datetime.now(
+                ZoneInfo(local_departure_timezone)
+        ):
+            raise serializers.ValidationError(
+                "Departure date must not be in the past"
+            )
+        if arrival_date_time <= departure_date_time:
+            raise serializers.ValidationError(
+                "Arrival must be after departure"
+            )
+
+        print(departure_date_time, arrival_date_time)
+        data["departure_date_time"] = departure_date_time
+        data["arrival_date_time"] = arrival_date_time
+
+        return data
+
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        flt_num = instance.flight_number
+        dep_tz = ZoneInfo(flt_num.origin_airport.city.timezone)
+        arr_tz = ZoneInfo(flt_num.destination_airport.city.timezone)
+
+        rep["departure_date_time"] = instance.departure_date_time.astimezone(dep_tz).isoformat()
+        rep["arrival_date_time"] = instance.arrival_date_time.astimezone(arr_tz).isoformat()
+        return rep
 
 
 class FlightListSerializer(FlightSerializer):
@@ -98,7 +125,7 @@ class FlightDetailSerializer(FlightListSerializer):
         model = Flight
         fields = FlightListSerializer.Meta.fields + (
             "aircraft_number", "aircraft_type",
-            "capacity", "current_availability"
+            "capacity", "current_availability", "duration"
         )
 
 class FlightBookingSerializer(FlightListSerializer):

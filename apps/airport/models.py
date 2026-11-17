@@ -1,5 +1,4 @@
 from django.db import models
-
 from apps.city.models import City
 from apps.country.models import Country
 
