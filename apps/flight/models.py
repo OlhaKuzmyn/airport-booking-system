@@ -1,4 +1,8 @@
+import datetime
+from zoneinfo import ZoneInfo
+
 from django.db import models
+from django.utils import timezone
 
 from apps.aircraft.models import Aircraft
 from apps.airline.models import Airline
@@ -63,6 +67,10 @@ class Flight(models.Model):
         rough_duration = self.arrival_date_time - self.departure_date_time
         duration_sec = int(rough_duration.total_seconds())
         return f"{round((duration_sec/60)/60)}:{int((duration_sec/60)%60)}"
+
+    @property
+    def past_flight(self):
+        return self.departure_date_time < timezone.now()
 
     class Meta:
         ordering = ["departure_date_time"]

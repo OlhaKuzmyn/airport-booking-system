@@ -1,3 +1,4 @@
+from django.utils import timezone
 from rest_framework import viewsets
 
 from airport_booking_system.permissions import IsAdminOrReadOnly
@@ -11,11 +12,18 @@ class FlightViewSet(viewsets.ModelViewSet):
     filterset_class = FlightFilter
 
     def get_queryset(self):
+        past_flight = self.request.query_params.get("past_flight", None)
+
         queryset = Flight.objects.select_related(
             "flight_number", "flight_number__airline",
-            "flight_number__origin_airport",
-            "flight_number__destination_airport"
+            "flight_number__origin_airport__city",
+            "flight_number__destination_airport__city",
         )
+        if past_flight:
+            queryset = queryset.filter(departure_date_time__lt=timezone.now())
+        else:
+            queryset = queryset.filter(departure_date_time__gte=timezone.now())
+
         if self.action == "retrieve":
             return queryset.prefetch_related("aircraft",
                                       "aircraft__aircraft_type",)

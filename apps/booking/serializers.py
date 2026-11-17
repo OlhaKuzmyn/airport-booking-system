@@ -1,10 +1,8 @@
-from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import transaction
 from rest_framework import serializers
 
 from apps.booking.models import Booking
-from apps.flight.models import Flight
-from apps.flight.serializers import FlightListSerializer, FlightBookingSerializer
+from apps.flight.serializers import FlightBookingSerializer
 from apps.passenger.models import Passenger
 from apps.passenger.serializers import PassengerSerializer, PassengerNameSerializer
 from apps.ticket.models import Ticket
