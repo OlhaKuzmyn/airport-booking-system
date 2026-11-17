@@ -1,4 +1,5 @@
 from django.db import transaction
+from django.utils import timezone
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 
@@ -21,9 +22,15 @@ class BookingViewSet(viewsets.ModelViewSet):
         return self.create(request, *args, **kwargs)
 
     def get_queryset(self):
+        past_booking = self.request.query_params.get("past_booking", None)
         queryset = Booking.objects.select_related(
                 "user",
             )
+        if past_booking:
+            queryset = queryset.filter(flights__departure_date_time__lt=timezone.now())
+        else:
+            queryset = queryset.filter(flights__departure_date_time__gte=timezone.now())
+
         if self.action == "retrieve":
             queryset = queryset.prefetch_related(
                 "flights", "passengers", "tickets"

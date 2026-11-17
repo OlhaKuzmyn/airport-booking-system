@@ -1,6 +1,7 @@
 import datetime
 from zoneinfo import ZoneInfo
 
+from django.utils import timezone
 from rest_framework import serializers
 
 from apps.flight.models import Flight, FlightNumber
@@ -43,9 +44,7 @@ class FlightSerializer(serializers.ModelSerializer):
         ) or self.instance.arrival_date_time
 
 
-        if departure_date_time < datetime.datetime.now(
-                ZoneInfo(local_departure_timezone)
-        ):
+        if departure_date_time < timezone.now():
             raise serializers.ValidationError(
                 "Departure date must not be in the past"
             )
