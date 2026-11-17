@@ -74,3 +74,11 @@ class Flight(models.Model):
 
     class Meta:
         ordering = ["departure_date_time"]
+        constraints = [
+            models.UniqueConstraint(
+                name="unique_flight_departure_date_time",
+                fields=[
+                    "flight_number", "departure_date_time", "arrival_date_time"
+                ],
+            )
+        ]
