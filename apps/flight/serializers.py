@@ -52,8 +52,6 @@ class FlightSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 "Arrival must be after departure"
             )
-
-        print(departure_date_time, arrival_date_time)
         data["departure_date_time"] = departure_date_time
         data["arrival_date_time"] = arrival_date_time
 

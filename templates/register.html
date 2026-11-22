@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block title %}User registration{% endblock %}
+{% block content %}
+  <h1>Welcome{% if name %} {{ name }}{% endif %}!</h1>
+  <p>To complete the registration please follow the <a href="{{ url }}">link</a></p>
+{% endblock %}

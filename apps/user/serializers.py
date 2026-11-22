@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from django.db import transaction
 from rest_framework import serializers
 
+from airport_booking_system.services.email_service import EmailService
 from apps.passenger.models import Passenger
 
 
@@ -48,7 +49,5 @@ class UserSerializer(serializers.ModelSerializer):
                 date_of_birth=dob,
                 user=user,
             )
+            EmailService.registration_confirmation(user)
             return user
-
-
-
