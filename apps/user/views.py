@@ -1,7 +1,7 @@
 from django.db import transaction
 from rest_framework import generics, status
 from rest_framework.generics import get_object_or_404
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
 from airport_booking_system.services.email_service import EmailService
@@ -18,6 +18,14 @@ class UserCreateView(generics.CreateAPIView):
         return self.create(request, *args, **kwargs)
 
 
+class ManageUserView(generics.RetrieveUpdateAPIView):
+    serializer_class = UserSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get_object(self):
+        return self.request.user
+
+
 class ActivateUserView(generics.GenericAPIView):
     permission_classes = (AllowAny,)
 
@@ -25,7 +33,7 @@ class ActivateUserView(generics.GenericAPIView):
         token = kwargs.get("token")
         user = JwtService.validate_token(token, ActivateToken)
         user.is_active = True
-        user.save()
+        user.save(update_fields=["is_active"])
         return Response(status=status.HTTP_200_OK)
 
 

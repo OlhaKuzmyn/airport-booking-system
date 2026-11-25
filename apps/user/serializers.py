@@ -29,16 +29,6 @@ class UserSerializer(serializers.ModelSerializer):
             "password": {"write_only": True,}
         }
 
-    # def validate(self, attrs):
-    #     email = attrs["email"]
-    #     password = attrs["password"]
-    #     if email == password:
-    #         raise serializers.ValidationError(
-    #             {"email_eq_password": "email equals password"}
-    #         )
-    #     return attrs
-
-    # @transaction.atomic
     def create(self, validated_data):
         with transaction.atomic():
             dob = validated_data.pop("date_of_birth", None)
