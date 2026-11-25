@@ -51,3 +51,15 @@ class UserSerializer(serializers.ModelSerializer):
             )
             EmailService.registration_confirmation(user)
             return user
+
+
+class CheckEmailPasswordRecoverySerializer(serializers.Serializer):
+    email = serializers.EmailField(required=True, write_only=True)
+
+
+class RecoveryPasswordSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = get_user_model()
+        fields = ("password",)
+        write_only_fields = ("password",)
